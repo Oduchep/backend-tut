@@ -1,16 +1,18 @@
 {
   "name": "backend-tut",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app",
+    "dev": "node --watch --env-file=.env app"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.18.3",
-    "joi": "^17.12.2"
+    "express": "^4.19.2",
+    "joi": "^17.13.1",
+    "mongodb": "^6.7.0"
   }
 }
