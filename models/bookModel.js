@@ -10,6 +10,7 @@ const bookSchema = new Schema(
     genres: { type: [String], required: true },
     rating: { type: Number, required: true },
     reviews: { type: Array },
+    user_id: { type: String, required: true },
   },
   { timestamps: true },
 );

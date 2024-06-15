@@ -1,6 +1,6 @@
 import Joi from 'joi';
 
-const bookSchema = Joi.object({
+const bookValidation = Joi.object({
   title: Joi.string().min(3).required(),
   author: Joi.string().min(3).required(),
   pages: Joi.number().required(),
@@ -9,4 +9,4 @@ const bookSchema = Joi.object({
   reviews: Joi.array(),
 });
 
-export { bookSchema };
+export { bookValidation };

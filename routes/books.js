@@ -6,8 +6,11 @@ import {
   getSingleBook,
   updateBook,
 } from '../controllers/bookController.js';
+import requireAuth from '../middleware/requireAuth.js';
 
 const router = express.Router();
+// require auth for all book routes
+router.use(requireAuth);
 
 // get all books
 router.get('/', getBooks);
