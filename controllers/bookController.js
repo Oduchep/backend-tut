@@ -1,8 +1,8 @@
+import { notFoundError } from '../errors/customError.js';
 import bookModel from '../models/bookModel.js';
-import { bookValidation } from '../validation/bookValidation.js';
 
 // get all books
-const getBooks = async (req, res) => {
+const getBooks = async (req, res, next) => {
   const user_id = req.user?._id;
 
   try {
@@ -17,48 +17,41 @@ const getBooks = async (req, res) => {
 
     res.status(200).json(allBooks);
   } catch (error) {
-    res.status(500).json({ error: 'Could not fetch the documents' });
+    next(error);
   }
 };
 
 // get single book
-const getSingleBook = async (req, res) => {
+const getSingleBook = async (req, res, next) => {
   const user_id = req.user?._id;
   const { id } = req.params;
 
   try {
     const book = await bookModel.findOne({ _id: id, user_id });
-    if (book) {
-      res.status(200).json(book);
-    } else {
-      res.status(404).json({ error: 'Book not found or not authorized!' });
+    if (!book) {
+      return next(notFoundError('Book not found!'));
     }
+    res.status(200).json(book);
   } catch (error) {
-    res.status(500).json({ error: 'Could not fetch the book' });
+    next(error);
   }
 };
 
 // add new book
-const addBook = async (req, res) => {
+const addBook = async (req, res, next) => {
   const body = req.body;
+  const user_id = req.user._id;
 
   try {
-    const { error } = bookValidation.validate(body);
-    if (error) {
-      return res.status(400).json({ error: error.details[0].message });
-    }
-
-    const user_id = req.user._id;
-
     const book = await bookModel.create({ ...body, user_id });
     res.status(200).json(book);
   } catch (error) {
-    res.status(400).send({ error: error.message });
+    return next(error);
   }
 };
 
 // update single book
-const updateBook = async (req, res) => {
+const updateBook = async (req, res, next) => {
   const user_id = req.user?._id;
   const { id } = req.params;
 
@@ -71,30 +64,28 @@ const updateBook = async (req, res) => {
         runValidators: true,
       },
     );
-    if (updatedBook) {
-      res.status(200).json(updatedBook);
-    } else {
-      res.status(404).json({ error: 'Book not found or not authorized!' });
+    if (!updatedBook) {
+      return next(notFoundError('Book not found!'));
     }
+    res.status(200).json(updatedBook);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    return next(error);
   }
 };
 
 // delete book
-const deleteBook = async (req, res) => {
+const deleteBook = async (req, res, next) => {
   const user_id = req.user?._id;
   const { id } = req.params;
 
   try {
     const book = await bookModel.findOneAndDelete({ _id: id, user_id });
-    if (book) {
-      res.status(200).json(book);
-    } else {
-      res.status(404).json({ error: 'Book not found or not authorized' });
+    if (!book) {
+      return next(notFoundError('Book not found!'));
     }
+    res.status(200).json(book);
   } catch (error) {
-    res.status(500).json({ error: 'Could not delete the book' });
+    return next(error);
   }
 };
 

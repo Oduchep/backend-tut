@@ -7,6 +7,8 @@ import {
   updateBook,
 } from '../controllers/bookController.js';
 import requireAuth from '../middleware/requireAuth.js';
+import { validateRequest } from '../middleware/validationMiddleware.js';
+import { bookValidation } from '../validation/bookValidation.js';
 
 const router = express.Router();
 // require auth for all book routes
@@ -16,7 +18,7 @@ router.use(requireAuth);
 router.get('/', getBooks);
 
 // add book
-router.post('/add-book', addBook);
+router.post('/add-book', validateRequest(bookValidation), addBook);
 
 // get single book
 router.get('/:id', getSingleBook);

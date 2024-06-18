@@ -1,21 +1,31 @@
 import express from 'express';
-import path from 'path';
 import mongoose from 'mongoose';
 import bookRoutes from './routes/books.js';
 import userRoutes from './routes/user.js';
+import logger from './middleware/logger.js';
+import errorHandler from './middleware/errorHandler.js';
+import notFound from './middleware/notFound.js';
 
 const app = express();
+
+// body parser middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// Logger middleware
+app.use(logger);
+
+// routes
 app.use('/api/books', bookRoutes);
 app.use('/api/auth', userRoutes);
 
-// app.use(express.static(path.join(__dirname, 'public')));
-
 app.get('/', (req, res) => {
-  res.send('Hello my friend!');
+  res.send('API works!');
 });
+
+// error handler
+app.use(notFound);
+app.use(errorHandler);
 
 const port = process.env.PORT || 6005;
 
