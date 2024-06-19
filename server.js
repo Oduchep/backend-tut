@@ -1,7 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import bookRoutes from './routes/books.js';
-import userRoutes from './routes/user.js';
+import bookRoutes from './routes/bookRoutes.js';
+import authRoutes from './routes/authRoutes.js';
 import logger from './middleware/logger.js';
 import errorHandler from './middleware/errorHandler.js';
 import notFound from './middleware/notFound.js';
@@ -17,7 +17,7 @@ app.use(logger);
 
 // routes
 app.use('/api/books', bookRoutes);
-app.use('/api/auth', userRoutes);
+app.use('/api/auth', authRoutes);
 
 app.get('/', (req, res) => {
   res.send('API works!');
